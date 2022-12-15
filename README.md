@@ -1,5 +1,8 @@
 # rock_paper_scissors_lizard_spock
 
+![Screenshot_20221215_173339](https://user-images.githubusercontent.com/82846351/207980247-1f546b79-c3dd-4e0c-818c-04c5c4504fe5.png)
+
+
 A new Flutter project.
 
 ## Getting Started
