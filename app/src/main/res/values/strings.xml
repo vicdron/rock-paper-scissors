@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Rock Paper Scissors</string>
+
+
+    <!--ad google-->
+    <string name="appid">ca-app-pub-4782720719921842~6867228506</string>
+    <string name="banner">ca-app-pub-4782720719921842/3985628887</string>
+    <string name="inter">ca-app-pub-4782720719921842/8789663657</string>
+</resources>

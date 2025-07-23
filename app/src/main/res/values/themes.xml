@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.RockPaperScissors" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <!-- Opcional: tornar a barra de navegação transparente -->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="Theme.RockPaperScissors" parent="Base.Theme.RockPaperScissors" />
+</resources>

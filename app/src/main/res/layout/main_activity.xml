@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/roxoclaro"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        ads:adSize="MEDIUM_RECTANGLE"
+        ads:adUnitId="@string/banner"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@+id/adView"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="66dp"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Classic"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+            <ImageView
+            android:id="@+id/img_jokenpow_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pngegg"
+            android:background="@drawable/contorno1"
+            android:clickable="true"
+            android:focusable="true"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginLeft="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Spock"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/> <ImageView
+            android:id="@+id/img_jokenpow_spock_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            android:src="@drawable/logo"
+            android:background="@drawable/contorno"
+            android:clickable="true"
+            android:focusable="true"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
