@@ -1,133 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/roxo">
+    android:background="@color/background"
+    android:fitsSystemWindows="true">
 
-    <View
+    <FrameLayout
+        android:id="@+id/native_ad_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50dp"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner"/>
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/native_ad_container">
 
-    <TextView
-        android:id="@+id/score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scoreboard: 0 - 0"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:textColor="@color/roxoclaro"
-        android:layout_below="@id/adView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/placar_contorno"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"/>
-
-    <ImageView
-        android:id="@+id/cpu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/rock"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/score" android:layout_marginTop="50dp"
-        android:scaleType="fitXY"
-        android:scaleY="0.6"
-        android:scaleX="0.6"/>
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="8dp"
+            android:text="@string/scoreboard_format"
+            android:textColor="@color/primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </com.google.android.material.card.MaterialCardView>
 
     <ImageView
         android:id="@+id/user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:scaleX="-0.9"
+        android:scaleY="0.9"
         android:src="@drawable/rock"
-        android:layout_below="@id/score" android:layout_marginTop="50dp"
-        android:scaleType="fitXY"
-        android:scaleY="0.6"
-        android:scaleX="-0.6"/>
+        app:layout_constraintEnd_toStartOf="@+id/cpu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_score" />
 
-    <TextView
-        android:id="@+id/resultado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Result"
-        android:padding="5dp"
-        android:textColor="#D0EDFC"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        android:layout_below="@id/user" android:layout_marginTop="30dp"/> <LinearLayout
-    android:id="@+id/optionButtons"
-    android:orientation="horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:layout_above="@+id/bntBack"
-    android:layout_marginBottom="20dp">
-
-    <ImageButton
-        android:id="@+id/btnPedra"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+    <ImageView
+        android:id="@+id/cpu"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="40dp"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
         android:src="@drawable/rock"
-        android:padding="5dp"
-        android:layout_margin="10dp"
-        android:scaleType="fitXY"
-        android:scaleY="1"
-        android:scaleX="1"
-        android:background="@drawable/contorno1"
-        android:rotation="90"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/user"
+        app:layout_constraintTop_toBottomOf="@id/card_score" />
 
-    <ImageButton
-        android:id="@+id/btnPapel"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/paper"
-        android:padding="5dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/contorno1"
-        android:scaleType="fitXY"
-        android:scaleY="1"
-        android:scaleX="1"
-        android:rotation="90" />
-
-    <ImageButton
-        android:id="@+id/btnTesoura"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/scissors"
-        android:padding="5dp"
-        android:background="@drawable/contorno1"
-        android:layout_margin="10dp"
-        android:scaleType="fitXY"
-        android:scaleY="1"
-        android:scaleX="1"
-        android:rotation="90" />
-</LinearLayout>
-
-    <Button
-        android:id="@+id/bntBack"
+    <!-- Result Overlay Panel -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Back"
-        android:textColor="#D0EDFC"
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:backgroundTint="@color/roxoclaro"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"/>
+        android:visibility="invisible"
+        app:cardBackgroundColor="@color/primaryContainer"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="16dp"
+        app:strokeColor="@color/primary"
+        app:strokeWidth="3dp"
+        app:layout_constraintBottom_toTopOf="@+id/optionButtons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/resultado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="40dp"
+            android:paddingVertical="20dp"
+            android:text="Result"
+            android:textAlignment="center"
+            android:textColor="@color/onPrimaryContainer"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:id="@+id/optionButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/layout_bottom_actions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="55dp"
+            app:cardElevation="6dp"
+            app:strokeColor="@color/primaryContainer"
+            app:strokeWidth="2dp">
+
+            <ImageButton
+                android:id="@+id/btnPedra"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/rock"
+                android:padding="22dp"
+                android:rotation="90"
+                android:scaleType="fitCenter"
+                android:src="@drawable/rock" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="55dp"
+            app:cardElevation="6dp"
+            app:strokeColor="@color/primaryContainer"
+            app:strokeWidth="2dp">
+
+            <ImageButton
+                android:id="@+id/btnPapel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/paper"
+                android:padding="22dp"
+                android:rotation="90"
+                android:scaleType="fitCenter"
+                android:src="@drawable/paper" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="55dp"
+            app:cardElevation="6dp"
+            app:strokeColor="@color/primaryContainer"
+            app:strokeWidth="2dp">
+
+            <ImageButton
+                android:id="@+id/btnTesoura"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/scissors"
+                android:padding="22dp"
+                android:rotation="90"
+                android:scaleType="fitCenter"
+                android:src="@drawable/scissors" />
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_bottom_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_restart"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/play_again"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bntBack"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

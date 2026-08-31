@@ -19,19 +19,19 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.vicdron.rockpaperscissors.databinding.JokenPowActivityBinding;
+import com.vicdron.rockpaperscissors.databinding.JokenPow7ActivityBinding;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class JokenPowActivity extends AppCompatActivity {
+public class JokenPow7Activity extends AppCompatActivity {
 
-    private JokenPowActivityBinding binding;
+    private JokenPow7ActivityBinding binding;
     private int playerScore = 0;
     private int cpuScore = 0;
-    private int winThreshold = 2;
-    private final String[] options = {"rock", "paper", "scissors"};
+    private int winThreshold = 2; // Default
+    private final String[] options = {"rock", "paper", "scissors", "lizard", "spock", "wolf", "sponge"};
     private final Map<String, Integer> spriteMap = new HashMap<>();
     private static final String PREFS_NAME = "GameStats";
 
@@ -40,28 +40,40 @@ public class JokenPowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        binding = JokenPowActivityBinding.inflate(getLayoutInflater());
+        binding = JokenPow7ActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         winThreshold = getIntent().getIntExtra("winThreshold", 2);
         AdManager.loadNativeAd(this, binding.nativeAdContainer);
 
-        // Sprite mapping (using original PNGs)
-        spriteMap.put("rock", R.drawable.rock);
-        spriteMap.put("paper", R.drawable.paper);
-        spriteMap.put("scissors", R.drawable.scissors);
+        // Sprite mapping (using modern vector icons)
+        spriteMap.put("rock", R.drawable.ic_rock);
+        spriteMap.put("paper", R.drawable.ic_paper);
+        spriteMap.put("scissors", R.drawable.ic_scissors);
+        spriteMap.put("lizard", R.drawable.ic_lizard);
+        spriteMap.put("spock", R.drawable.ic_spock);
+        spriteMap.put("wolf", R.drawable.ic_wolf);
+        spriteMap.put("sponge", R.drawable.ic_sponge);
 
         // Listeners
-        binding.btnPedra.setOnClickListener(v -> startRound("rock"));
-        binding.btnPapel.setOnClickListener(v -> startRound("paper"));
-        binding.btnTesoura.setOnClickListener(v -> startRound("scissors"));
+        binding.btnRock.setOnClickListener(v -> startRound("rock"));
+        binding.btnPaper.setOnClickListener(v -> startRound("paper"));
+        binding.btnScissors.setOnClickListener(v -> startRound("scissors"));
+        binding.btnLizard.setOnClickListener(v -> startRound("lizard"));
+        binding.btnSpock.setOnClickListener(v -> startRound("spock"));
+        binding.btnWolf.setOnClickListener(v -> startRound("wolf"));
+        binding.btnSponge.setOnClickListener(v -> startRound("sponge"));
 
         binding.bntBack.setOnClickListener(v -> showExitDialog());
         binding.btnRestart.setOnClickListener(v -> restartGame());
 
-        setupButtonTouchAnimation(binding.btnPedra);
-        setupButtonTouchAnimation(binding.btnPapel);
-        setupButtonTouchAnimation(binding.btnTesoura);
+        setupButtonTouchAnimation(binding.btnRock);
+        setupButtonTouchAnimation(binding.btnPaper);
+        setupButtonTouchAnimation(binding.btnScissors);
+        setupButtonTouchAnimation(binding.btnLizard);
+        setupButtonTouchAnimation(binding.btnSpock);
+        setupButtonTouchAnimation(binding.btnWolf);
+        setupButtonTouchAnimation(binding.btnSponge);
         setupButtonTouchAnimation(binding.bntBack);
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -149,7 +161,7 @@ public class JokenPowActivity extends AppCompatActivity {
 
                 new Handler().postDelayed(() -> {
                     showAnimatedResult(finalWinner);
-                    AdManager.showInterstitialWithFrequency(JokenPowActivity.this);
+                    AdManager.showInterstitialWithFrequency(JokenPow7Activity.this);
                     binding.btnRestart.setVisibility(View.VISIBLE);
                 }, 1500);
             } else {
@@ -159,9 +171,13 @@ public class JokenPowActivity extends AppCompatActivity {
     }
 
     private void setButtonsEnabled(boolean enabled) {
-        binding.btnPedra.setEnabled(enabled);
-        binding.btnPapel.setEnabled(enabled);
-        binding.btnTesoura.setEnabled(enabled);
+        binding.btnRock.setEnabled(enabled);
+        binding.btnPaper.setEnabled(enabled);
+        binding.btnScissors.setEnabled(enabled);
+        binding.btnLizard.setEnabled(enabled);
+        binding.btnSpock.setEnabled(enabled);
+        binding.btnWolf.setEnabled(enabled);
+        binding.btnSponge.setEnabled(enabled);
     }
 
     private void performHapticFeedback(boolean isWin) {
@@ -217,7 +233,6 @@ public class JokenPowActivity extends AppCompatActivity {
         cpuAnim.setRepeatCount(2);
         playerAnim.setDuration(300);
         cpuAnim.setDuration(300);
-        
         AnimatorSet set = new AnimatorSet();
         set.playTogether(playerAnim, cpuAnim);
         set.start();
@@ -235,13 +250,25 @@ public class JokenPowActivity extends AppCompatActivity {
 
         switch (player) {
             case "rock":
-                if (cpu.equals("scissors")) return "You won!";
+                if (cpu.equals("scissors") || cpu.equals("lizard") || cpu.equals("wolf")) return "You won!";
                 break;
             case "paper":
-                if (cpu.equals("rock")) return "You won!";
+                if (cpu.equals("rock") || cpu.equals("spock") || cpu.equals("sponge")) return "You won!";
                 break;
             case "scissors":
-                if (cpu.equals("paper")) return "You won!";
+                if (cpu.equals("paper") || cpu.equals("lizard") || cpu.equals("sponge")) return "You won!";
+                break;
+            case "lizard":
+                if (cpu.equals("paper") || cpu.equals("spock") || cpu.equals("wolf")) return "You won!";
+                break;
+            case "spock":
+                if (cpu.equals("scissors") || cpu.equals("rock") || cpu.equals("wolf")) return "You won!";
+                break;
+            case "wolf":
+                if (cpu.equals("paper") || cpu.equals("scissors") || cpu.equals("sponge")) return "You won!";
+                break;
+            case "sponge":
+                if (cpu.equals("rock") || cpu.equals("lizard") || cpu.equals("spock")) return "You won!";
                 break;
         }
         return "You lost!";

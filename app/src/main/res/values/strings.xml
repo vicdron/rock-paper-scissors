@@ -1,9 +1,42 @@
 <resources>
     <string name="app_name">Rock Paper Scissors</string>
 
-
-    <!--ad google-->
+    <!-- Ad Google -->
     <string name="appid">ca-app-pub-4782720719921842~6867228506</string>
     <string name="banner">ca-app-pub-4782720719921842/3985628887</string>
+    <string name="native_ad_id">ca-app-pub-4782720719921842/1025718690</string>
     <string name="inter">ca-app-pub-4782720719921842/8789663657</string>
+
+    <string name="desc_classic_mode">Classic Mode: 3 elements</string>
+    <string name="desc_spock_mode">Spock Mode: 5 elements</string>
+    <string name="desc_7_mode">Epic Mode: 7 elements (Wolf &amp; Sponge)</string>
+
+    <string name="wolf">Wolf</string>
+    <string name="sponge">Sponge</string>
+
+    <string name="best_of_3">Best of 3</string>
+    <string name="best_of_5">Best of 5</string>
+    <string name="play_again">Play Again</string>
+
+    <string name="rock">Rock</string>
+    <string name="paper">Paper</string>
+    <string name="scissors">Scissors</string>
+    <string name="lizard">Lizard</string>
+    <string name="spock">Spock</string>
+    <string name="back">Back</string>
+
+    <string name="exit_title">Exit Game</string>
+    <string name="exit_message">Do you really want to exit and abandon the current match?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="total_wins">Wins: %1$d</string>
+    <string name="total_losses">Losses: %1$d</string>
+
+    <string name="scoreboard_format">You: %1$d  |  App: %2$d</string>
+    <string name="result_won">You won the round!</string>
+    <string name="result_lost">You lost the round!</string>
+    <string name="result_draw">It\'s a Draw!</string>
+    <string name="match_won">Congratulations, you won the match!</string>
+    <string name="match_lost">Better luck next time!</string>
 </resources>

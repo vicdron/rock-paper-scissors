@@ -20,7 +20,7 @@
         android:id="@+id/card_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,19 +35,19 @@
             android:paddingVertical="8dp"
             android:text="@string/scoreboard_format"
             android:textColor="@color/primary"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
     </com.google.android.material.card.MaterialCardView>
 
     <ImageView
         android:id="@+id/user"
         android:layout_width="0dp"
-        android:layout_height="180dp"
+        android:layout_height="160dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:scaleX="-0.8"
         android:scaleY="0.8"
-        android:src="@drawable/rock"
+        android:src="@drawable/ic_rock"
         app:layout_constraintEnd_toStartOf="@+id/cpu"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/card_score" />
@@ -55,12 +55,12 @@
     <ImageView
         android:id="@+id/cpu"
         android:layout_width="0dp"
-        android:layout_height="180dp"
+        android:layout_height="160dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:scaleX="0.8"
         android:scaleY="0.8"
-        android:src="@drawable/rock"
+        android:src="@drawable/ic_rock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/user"
         app:layout_constraintTop_toBottomOf="@id/card_score" />
@@ -86,149 +86,109 @@
             android:id="@+id/resultado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="32dp"
-            android:paddingVertical="16dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="12dp"
             android:text="Result"
             android:textAlignment="center"
             android:textColor="@color/onPrimaryContainer"
-            android:textSize="28sp"
+            android:textSize="22sp"
             android:textStyle="bold" />
     </com.google.android.material.card.MaterialCardView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <GridLayout
         android:id="@+id/optionButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
+        android:columnCount="4"
         app:layout_constraintBottom_toTopOf="@+id/layout_bottom_actions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardPedra"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:layout_margin="6dp"
-            app:cardCornerRadius="42.5dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="40dp"
             app:cardElevation="4dp"
             app:strokeColor="@color/primaryContainer"
-            app:strokeWidth="2dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-            <ImageButton
-                android:id="@+id/btnPedra"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/rock"
-                android:padding="16dp"
-                android:rotation="90"
-                android:scaleType="fitCenter"
-                android:src="@drawable/rock" />
+            app:strokeWidth="2dp">
+            <ImageButton android:id="@+id/btn_rock" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/selectableItemBackgroundBorderless" android:padding="14dp" android:src="@drawable/ic_rock" android:rotation="90" android:scaleType="fitCenter" android:contentDescription="@string/rock"/>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardPapel"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:layout_margin="6dp"
-            app:cardCornerRadius="42.5dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="40dp"
             app:cardElevation="4dp"
             app:strokeColor="@color/primaryContainer"
-            app:strokeWidth="2dp"
-            app:layout_constraintStart_toEndOf="@id/cardPedra"
-            app:layout_constraintTop_toTopOf="parent">
-            <ImageButton
-                android:id="@+id/btnPapel"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/paper"
-                android:padding="16dp"
-                android:rotation="90"
-                android:scaleType="fitCenter"
-                android:src="@drawable/paper" />
+            app:strokeWidth="2dp">
+            <ImageButton android:id="@+id/btn_paper" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/selectableItemBackgroundBorderless" android:padding="14dp" android:src="@drawable/ic_paper" android:rotation="90" android:scaleType="fitCenter" android:contentDescription="@string/paper"/>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardTesoura"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:layout_margin="6dp"
-            app:cardCornerRadius="42.5dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="40dp"
             app:cardElevation="4dp"
             app:strokeColor="@color/primaryContainer"
-            app:strokeWidth="2dp"
-            app:layout_constraintStart_toEndOf="@id/cardPapel"
-            app:layout_constraintTop_toTopOf="parent">
-            <ImageButton
-                android:id="@+id/btnTesoura"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/scissors"
-                android:padding="16dp"
-                android:rotation="90"
-                android:scaleType="fitCenter"
-                android:src="@drawable/scissors" />
+            app:strokeWidth="2dp">
+            <ImageButton android:id="@+id/btn_scissors" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/selectableItemBackgroundBorderless" android:padding="14dp" android:src="@drawable/ic_scissors" android:rotation="90" android:scaleType="fitCenter" android:contentDescription="@string/scissors"/>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardLizard"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:layout_margin="6dp"
-            app:cardCornerRadius="42.5dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="40dp"
             app:cardElevation="4dp"
             app:strokeColor="@color/primaryContainer"
-            app:strokeWidth="2dp"
-            app:layout_constraintEnd_toStartOf="@+id/cardSpock"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardPapel">
-            <ImageButton
-                android:id="@+id/btnLizard"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/lizard"
-                android:padding="16dp"
-                android:rotation="90"
-                android:scaleType="fitCenter"
-                android:src="@drawable/lagarto" />
+            app:strokeWidth="2dp">
+            <ImageButton android:id="@+id/btn_lizard" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/selectableItemBackgroundBorderless" android:padding="14dp" android:src="@drawable/ic_lizard" android:rotation="90" android:scaleType="fitCenter" android:contentDescription="@string/lizard"/>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardSpock"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:layout_margin="6dp"
-            app:cardCornerRadius="42.5dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="40dp"
             app:cardElevation="4dp"
             app:strokeColor="@color/primaryContainer"
-            app:strokeWidth="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cardLizard"
-            app:layout_constraintTop_toBottomOf="@id/cardPapel">
-            <ImageButton
-                android:id="@+id/btnSpock"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/spock"
-                android:padding="16dp"
-                android:rotation="90"
-                android:scaleType="fitCenter"
-                android:src="@drawable/spock" />
+            app:strokeWidth="2dp">
+            <ImageButton android:id="@+id/btn_spock" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/selectableItemBackgroundBorderless" android:padding="14dp" android:src="@drawable/ic_spock" android:rotation="90" android:scaleType="fitCenter" android:contentDescription="@string/spock"/>
         </com.google.android.material.card.MaterialCardView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="40dp"
+            app:cardElevation="4dp"
+            app:strokeColor="@color/primaryContainer"
+            app:strokeWidth="2dp">
+            <ImageButton android:id="@+id/btn_wolf" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/selectableItemBackgroundBorderless" android:padding="14dp" android:src="@drawable/ic_wolf" android:rotation="90" android:scaleType="fitCenter" android:contentDescription="@string/wolf"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="40dp"
+            app:cardElevation="4dp"
+            app:strokeColor="@color/primaryContainer"
+            app:strokeWidth="2dp">
+            <ImageButton android:id="@+id/btn_sponge" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/selectableItemBackgroundBorderless" android:padding="14dp" android:src="@drawable/ic_sponge" android:rotation="90" android:scaleType="fitCenter" android:contentDescription="@string/sponge"/>
+        </com.google.android.material.card.MaterialCardView>
+
+    </GridLayout>
 
     <LinearLayout
         android:id="@+id/layout_bottom_actions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="32dp"
         android:orientation="vertical"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -250,7 +210,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/back"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

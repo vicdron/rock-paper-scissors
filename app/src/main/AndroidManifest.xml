@@ -11,13 +11,16 @@
         android:theme="@style/Theme.RockPaperScissors"
         tools:targetApi="31">
         <activity
-            android:name="com.vicdron.rockpaperscissors.JokenPowSpockActivity"
+            android:name=".JokenPowSpockActivity"
             android:exported="false"/>
         <activity
             android:name=".JokenPowActivity"
             android:exported="false"/>
         <activity
-            android:name="com.vicdron.rockpaperscissors.MainActivity"
+            android:name=".JokenPow7Activity"
+            android:exported="false"/>
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

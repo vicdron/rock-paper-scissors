@@ -5,27 +5,21 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.animation.OvershootInterpolator;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.FullScreenContentCallback;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.vicdron.rockpaperscissors.databinding.JokenPowSpockActivityBinding;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,160 +27,204 @@ import java.util.Random;
 
 public class JokenPowSpockActivity extends AppCompatActivity {
 
-    TextView bntBack;
-    private ImageView user, cpu;
-    private ImageButton btnSpock;
-    private TextView scoreText, resultadoText; // Renomeado para evitar conflito com método
+    private JokenPowSpockActivityBinding binding;
     private int playerScore = 0;
     private int cpuScore = 0;
-    private final String[] options = {"rock", "paper", "scissors", "lagarto", "spock"};
+    private int winThreshold = 2;
+    private final String[] options = {"rock", "paper", "scissors", "lizard", "spock"};
     private final Map<String, Integer> spriteMap = new HashMap<>();
-    private String playerChoice;
-
-    private InterstitialAd mInterstitialAd;
+    private static final String PREFS_NAME = "GameStats";
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.joken_pow_spock_activity); // Certifique-se que este é o layout correto
+        binding = JokenPowSpockActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        new AdRequest.Builder().build();
-        ((AdView) findViewById(R.id.adView)).loadAd(new AdRequest.Builder().build());
+        winThreshold = getIntent().getIntExtra("winThreshold", 2);
+        AdManager.loadNativeAd(this, binding.nativeAdContainer);
 
-        scoreText = findViewById(R.id.score);
-        resultadoText = findViewById(R.id.resultado); // Inicializa o TextView do resultado
-        user = findViewById(R.id.user);
-        cpu = findViewById(R.id.cpu);
-        ImageButton btnPedra = findViewById(R.id.btnPedra);
-        ImageButton btnPapel = findViewById(R.id.btnPapel);
-        ImageButton btnTesoura = findViewById(R.id.btnTesoura);
-        btnSpock = findViewById(R.id.btnSpock); // Inicializa o botão Spock
-        // Adicionado btnSpock e btnLizard
-        ImageButton btnLizard = findViewById(R.id.btnLizard); // Inicializa o botão Lagarto
-        bntBack = findViewById(R.id.bntBack);
-
-        // Mapeamento de sprites: Adicione "lizard" e "spock"
+        // Sprite mapping (using original PNGs)
         spriteMap.put("rock", R.drawable.rock);
         spriteMap.put("paper", R.drawable.paper);
         spriteMap.put("scissors", R.drawable.scissors);
-        spriteMap.put("lagarto", R.drawable.lagarto);
+        spriteMap.put("lizard", R.drawable.lagarto);
         spriteMap.put("spock", R.drawable.spock);
 
-        // Listeners para todas as 5 opções
-        btnPedra.setOnClickListener(v -> startRound("rock"));
-        btnPapel.setOnClickListener(v -> startRound("paper"));
-        btnTesoura.setOnClickListener(v -> startRound("scissors"));
-        btnSpock.setOnClickListener(v -> startRound("spock"));
-        btnLizard.setOnClickListener(v -> startRound("lagarto"));
+        // Listeners
+        binding.btnPedra.setOnClickListener(v -> startRound("rock"));
+        binding.btnPapel.setOnClickListener(v -> startRound("paper"));
+        binding.btnTesoura.setOnClickListener(v -> startRound("scissors"));
+        binding.btnSpock.setOnClickListener(v -> startRound("spock"));
+        binding.btnLizard.setOnClickListener(v -> startRound("lizard"));
 
-        // Botão para voltar
-        bntBack.setOnClickListener(v -> {
-            showInterstitialAd();
-            finish();
-            overridePendingTransition(
-                    R.anim.slide_in_left,
-                    R.anim.slide_out_right);
+        binding.bntBack.setOnClickListener(v -> showExitDialog());
+        binding.btnRestart.setOnClickListener(v -> restartGame());
+
+        setupButtonTouchAnimation(binding.btnPedra);
+        setupButtonTouchAnimation(binding.btnPapel);
+        setupButtonTouchAnimation(binding.btnTesoura);
+        setupButtonTouchAnimation(binding.btnSpock);
+        setupButtonTouchAnimation(binding.btnLizard);
+        setupButtonTouchAnimation(binding.bntBack);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showExitDialog();
+            }
         });
-
-        setupButtonTouchAnimation(btnPedra);
-        setupButtonTouchAnimation(btnPapel);
-        setupButtonTouchAnimation(btnTesoura);
-        setupButtonTouchAnimation(btnSpock);   // Adiciona animação para Spock
-        setupButtonTouchAnimation(btnLizard); // Adiciona animação para Lagarto
-        setupButtonTouchAnimation(bntBack); // Mantém a animação para o botão Back
 
         updateScore();
     }
+
+    private void restartGame() {
+        playerScore = 0;
+        cpuScore = 0;
+        updateScore();
+        binding.btnRestart.setVisibility(View.GONE);
+        setButtonsEnabled(true);
+    }
+
+    private void showExitDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.exit_title)
+                .setMessage(R.string.exit_message)
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                    finish();
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                })
+                .setNegativeButton(R.string.no, null)
+                .show();
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private void setupButtonTouchAnimation(View button) {
         button.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    v.animate().scaleX(0.95f).scaleY(0.95f).alpha(0.7f).setDuration(100).start();
+                    v.animate().scaleX(0.92f).scaleY(0.92f).setDuration(100).start();
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    v.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(100).start();
+                    v.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
                     break;
             }
             return false;
         });
     }
 
-    public void startRound(String choice) {
-        this.playerChoice = choice;
-
-        // Define as imagens iniciais das mãos como "rock" para ambos (opcional, pode ser qualquer um)
-        user.setImageResource(spriteMap.get("rock"));
-        cpu.setImageResource(spriteMap.get("rock"));
+    public void startRound(String playerChoice) {
+        binding.user.setImageResource(spriteMap.get("rock"));
+        binding.cpu.setImageResource(spriteMap.get("rock"));
+        
+        setButtonsEnabled(false);
 
         animateHands(() -> {
-            // Escolha aleatória da CPU entre as 5 opções
             String cpuChoice = options[new Random().nextInt(options.length)];
 
-            user.setImageResource(spriteMap.get(playerChoice));
-            cpu.setImageResource(spriteMap.get(cpuChoice));
+            binding.user.setImageResource(spriteMap.get(playerChoice));
+            binding.cpu.setImageResource(spriteMap.get(cpuChoice));
 
             String result = getWinner(playerChoice, cpuChoice);
-            resultadoText.setText(result);
 
             if (result.equals("You won!")) {
                 playerScore++;
                 updateScore();
-                showAnimatedResult("You won the round!");
-            } else if (result.equals("You lost!")) { // Alterei a string
+                showAnimatedResult(getString(R.string.result_won));
+                performHapticFeedback(true);
+            } else if (result.equals("You lost!")) {
                 cpuScore++;
                 updateScore();
-                showAnimatedResult("You lost the round!");
-            } else { // Empate
-                showAnimatedResult("Draw!");
+                showAnimatedResult(getString(R.string.result_lost));
+                performHapticFeedback(false);
+            } else {
+                showAnimatedResult(getString(R.string.result_draw));
+                binding.getRoot().performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             }
-            // Lógica para verificar o vencedor final (mantida como 2 rodadas)
-            if (playerScore == 2 || cpuScore == 2) {
-                String finalWinner = playerScore == 2 ?
-                        "Congratulations, you won the match!" :
-                        "Better luck next time!";
 
-                new Handler().postDelayed(() -> showAnimatedResult(finalWinner), 2000);
+            if (playerScore >= winThreshold || cpuScore >= winThreshold) {
+                boolean playerWonMatch = playerScore >= winThreshold;
+                saveMatchResult(playerWonMatch);
 
-                // Reinicia a pontuação para nova partida após um pequeno atraso
+                String finalWinner = playerWonMatch ?
+                        getString(R.string.match_won) :
+                        getString(R.string.match_lost);
+
                 new Handler().postDelayed(() -> {
-                    playerScore = 0;
-                    cpuScore = 0;
-                    updateScore();
-                }, 2000); // 2 segundos para o usuário ver o resultado final antes de reiniciar
+                    showAnimatedResult(finalWinner);
+                    AdManager.showInterstitialWithFrequency(JokenPowSpockActivity.this);
+                    binding.btnRestart.setVisibility(View.VISIBLE);
+                }, 1500);
+            } else {
+                new Handler().postDelayed(() -> setButtonsEnabled(true), 1500);
             }
         });
     }
-    public void showAnimatedResult(String message) {
-        // resultadoText já está inicializado no onCreate
-        resultadoText.setText(message);
-        resultadoText.setAlpha(0f);
-        resultadoText.setVisibility(View.VISIBLE);
-        resultadoText.setGravity(Gravity.CENTER);
 
-        resultadoText.animate()
+    private void setButtonsEnabled(boolean enabled) {
+        binding.btnPedra.setEnabled(enabled);
+        binding.btnPapel.setEnabled(enabled);
+        binding.btnTesoura.setEnabled(enabled);
+        binding.btnSpock.setEnabled(enabled);
+        binding.btnLizard.setEnabled(enabled);
+    }
+
+    private void performHapticFeedback(boolean isWin) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            binding.getRoot().performHapticFeedback(isWin ? HapticFeedbackConstants.CONFIRM : HapticFeedbackConstants.REJECT);
+        } else {
+            binding.getRoot().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+        }
+    }
+
+    private void saveMatchResult(boolean playerWon) {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        if (playerWon) {
+            int wins = prefs.getInt("total_wins", 0);
+            editor.putInt("total_wins", wins + 1);
+        } else {
+            int losses = prefs.getInt("total_losses", 0);
+            editor.putInt("total_losses", losses + 1);
+        }
+        editor.apply();
+    }
+
+    public void showAnimatedResult(String message) {
+        binding.resultado.setText(message);
+        binding.cardResult.setVisibility(View.VISIBLE);
+        binding.cardResult.setAlpha(0f);
+        binding.cardResult.setScaleX(0.5f);
+        binding.cardResult.setScaleY(0.5f);
+
+        binding.cardResult.animate()
                 .alpha(1f)
-                .setDuration(250)
-                .withEndAction(() -> resultadoText.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(400)
+                .setInterpolator(new OvershootInterpolator())
+                .withEndAction(() -> binding.cardResult.animate()
                         .alpha(0f)
-                        .setDuration(250)
-                        .setStartDelay(500)
-                        .withEndAction(() -> resultadoText.setVisibility(View.GONE))
+                        .scaleX(0.8f)
+                        .scaleY(0.8f)
+                        .setDuration(300)
+                        .setStartDelay(1000)
+                        .withEndAction(() -> binding.cardResult.setVisibility(View.INVISIBLE))
                         .start())
                 .start();
     }
 
     public void animateHands(Runnable onEnd) {
-        ObjectAnimator playerAnim = ObjectAnimator.ofFloat(user, "translationY", 0f, -50f, 0f);
-        ObjectAnimator cpuAnim = ObjectAnimator.ofFloat(cpu, "translationY", 0f, -50f, 0f);
+        ObjectAnimator playerAnim = ObjectAnimator.ofFloat(binding.user, "translationY", 0f, -60f, 0f);
+        ObjectAnimator cpuAnim = ObjectAnimator.ofFloat(binding.cpu, "translationY", 0f, -60f, 0f);
 
         playerAnim.setRepeatCount(2);
         cpuAnim.setRepeatCount(2);
-        playerAnim.setDuration(375);
-        cpuAnim.setDuration(375);
+        playerAnim.setDuration(300);
+        cpuAnim.setDuration(300);
         AnimatorSet set = new AnimatorSet();
         set.playTogether(playerAnim, cpuAnim);
         set.start();
@@ -198,98 +236,31 @@ public class JokenPowSpockActivity extends AppCompatActivity {
             }
         });
     }
+
     public String getWinner(String player, String cpu) {
         if (player.equals(cpu)) return "Draw!";
 
-        // Regras de vitória para cada opção do jogador
         switch (player) {
-            case "rock": // Pedra
-                if (cpu.equals("scissors") || cpu.equals("lagarto")) {
-                    return "You won!"; // Pedra quebra Tesoura, Pedra esmaga Lagarto
-                }
+            case "rock":
+                if (cpu.equals("scissors") || cpu.equals("lizard")) return "You won!";
                 break;
-            case "paper": // Papel
-                if (cpu.equals("rock") || cpu.equals("spock")) {
-                    return "You won!"; // Papel cobre Pedra, Papel refuta Spock
-                }
+            case "paper":
+                if (cpu.equals("rock") || cpu.equals("spock")) return "You won!";
                 break;
-            case "scissors": // Tesoura
-                if (cpu.equals("paper") || cpu.equals("lagarto")) {
-                    return "You won!"; // Tesoura corta Papel, Tesoura decapita Lagarto
-                }
+            case "scissors":
+                if (cpu.equals("paper") || cpu.equals("lizard")) return "You won!";
                 break;
-            case "lagarto": // Lagarto
-                if (cpu.equals("paper") || cpu.equals("spock")) {
-                    return "You won!"; // Lagarto come Papel, Lagarto envenena Spock
-                }
+            case "lizard":
+                if (cpu.equals("paper") || cpu.equals("spock")) return "You won!";
                 break;
-            case "spock": // Spock
-                if (cpu.equals("scissors") || cpu.equals("rock")) {
-                    return "You won!"; // Spock quebra Tesoura, Spock vaporiza Pedra
-                }
+            case "spock":
+                if (cpu.equals("scissors") || cpu.equals("rock")) return "You won!";
                 break;
         }
-        return "You lost!"; // Se o jogador não venceu, a CPU venceu
+        return "You lost!";
     }
 
-    @SuppressLint("SetTextI18n")
     private void updateScore() {
-        scoreText.setText("You: " + playerScore + "  |  App: " + cpuScore);
-
-    }
-    private void loadInterstitialAd() {
-        String interstitialId = getString(R.string.inter); // ID do anúncio
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        InterstitialAd.load(this, interstitialId, adRequest, new InterstitialAdLoadCallback() {
-            @Override
-            public void onAdLoaded(@NonNull InterstitialAd ad) {
-                mInterstitialAd = ad;  // Armazena o anúncio carregado na variável
-                // *** REMOVA OU COMENTE A LINHA ABAIXO ***
-                // mInterstitialAd.show(Player.this); // ERRO: Não chame show() aqui!
-
-                // Opcional: Adicione um Listener para saber quando o anúncio foi fechado
-                mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
-                    @Override
-                    public void onAdDismissedFullScreenContent() {
-                        // Chamado quando o anúncio é fechado
-                        Log.d("AdDebug", "O anúncio intersticial foi fechado.");
-                        // Aqui você pode carregar o próximo anúncio ou fazer outra ação
-                        // loadInterstitialAd();
-                    }
-
-                    @Override
-                    public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-                        // Chamado quando o anúncio falha ao ser exibido
-                        Log.e("AdError", "Falha ao exibir o anúncio: " + adError.getMessage());
-                    }
-
-                    @Override
-                    public void onAdShowedFullScreenContent() {
-                        // Chamado quando o anúncio é exibido
-                        Log.d("AdDebug", "O anúncio intersticial foi exibido.");
-                    }
-                });
-                Log.d("AdDebug", "Anúncio intersticial carregado com sucesso.");
-            }
-
-            @Override
-            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                Log.e("AdError", "Falha ao carregar o anúncio: " + loadAdError.getMessage());
-                mInterstitialAd = null; // Garanta que a referência seja nula em caso de falha
-            }
-        });
-    }
-
-    // Este método deve ser chamado em um PONTO DE TRANSIÇÃO NATURAL DO SEU APP
-    private void showInterstitialAd() {
-        if (mInterstitialAd != null) {
-            mInterstitialAd.show(JokenPowSpockActivity.this);
-            // Após exibir o anúncio, você pode querer carregá-lo novamente para o próximo uso
-            // loadInterstitialAd(); // Depende da sua lógica
-        } else {
-            Log.d("AdDebug", "Anúncio intersticial não está disponível para exibição. Carregando um novo.");
-            loadInterstitialAd(); // Tente carregar novamente se não estiver disponível
-        }
+        binding.score.setText(getString(R.string.scoreboard_format, playerScore, cpuScore));
     }
 }
